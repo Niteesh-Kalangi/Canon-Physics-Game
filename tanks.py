@@ -10,6 +10,7 @@ m = 10
 w = 0
 currentPlayer = 0
 
+
 #cannonball class
 class CannonBall:
   xPos = 0
@@ -108,6 +109,8 @@ def drawBall(xPos, yPos):
   DISPLAYSURF.blit(cannonballImg, (xPos, yPos))
 
 def fire(ball):
+  
+   global currentPlayer
    fire = True
    while fire:
       
@@ -117,7 +120,7 @@ def fire(ball):
 
       if ball.colliding() > 0:
         fire = False
-        currentPlayer = currentPlayer + 1
+        currentPlayer += 1
       else:
         DISPLAYSURF.blit(cannonballImg, (ball.xPos, ball.yPos))
         repaint()
