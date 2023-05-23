@@ -118,7 +118,7 @@ while True:
       ballOne.updatePosition(0.1)
       pygame.time.wait(30)
 
-      if ballOne.xPos > DISPLAYSURF.get_width() or ballOne.yPos > DISPLAYSURF.get_height() or ballOne.yPos < 0:
+      if ballOne.xPos > DISPLAYSURF.get_width() or ballOne.xPos < 0 or ballOne.yPos > DISPLAYSURF.get_height() or ballOne.yPos < 0:
         fire = False
       else:
         
