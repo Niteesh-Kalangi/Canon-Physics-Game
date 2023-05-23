@@ -16,7 +16,7 @@ class CannonBall:
   iniYVel = 0
   lastUpdate = 0
   
-  def __init__(self, xPos, yPos, xVel, yVel, lastUpdate):
+  def __init__(self, xPos, yPos, xVel, yVel):
     self.xPos = xPos
     self.yPos = yPos
     self.xVel = xVel
@@ -30,8 +30,8 @@ class CannonBall:
     self.lastUpdate = time
 
   def updatePosition(self, time):
-    self.xPos = self.xPos + self.xVel * (time)
-    self.yPos = self.yPos + self.yVel * (time)
+    self.xPos = self.xPos + self.xVel * (time) * 20
+    self.yPos = self.yPos - self.yVel * (time) * 20
 
   #def hitCannon(cannon):
     
@@ -46,7 +46,7 @@ class Cannon:
     #ball = CannonBall(xPos, yPos, )
     
   
-ball = CannonBall(0,0,10.0,10.0,0)
+ball = CannonBall(0,0,10.0,10.0)
 
 
 for i in range(400):
@@ -73,7 +73,8 @@ pygame.draw.rect(DISPLAYSURF, color, pygame.Rect(0, 700, 1000, 300))
 
 cannonImg = pygame.image.load('assets/cannon.png')
 cannonImg = pygame.transform.scale(cannonImg, (80, int(int(cannonImg.get_rect().height) * (80/int(cannonImg.get_rect().width)))))
-
+cannonballImg = pygame.image.load('assets/cannonball.png')
+cannonballImg = pygame.transform.scale(cannonballImg, (20, int(int(cannonballImg.get_rect().height) * (20/int(cannonballImg.get_rect().width)))))
 
 
 cannon1 = Cannon(100, 100, 700)
@@ -88,15 +89,21 @@ def drawCannon(health, xPos, yPos):
       print("under")
       DISPLAYSURF.blit(cannonImg, (xPos - cannonImg.get_rect().width/2, yPos))
 
+def drawBall(xPos, yPos):
+  DISPLAYSURF.blit(cannonballImg, (xPos, yPos))
+
 
 drawCannon(cannon1.health, cannon1.xPos, cannon1.yPos)
 drawCannon(cannon2.health, cannon2.xPos, cannon2.yPos)
+drawBall(cannon1.xPos + cannonImg.get_rect().width/2, cannon1.yPos)
 
 castle = pygame.image.load('assets/castle.png')
 castle = pygame.transform.scale(castle, (200, int(int(castle.get_rect().height) * (200/int(castle.get_rect().width)))))
+
+ballOne = CannonBall(cannon1.xPos + cannonImg.get_rect().width/2, cannon1.yPos, 8, 22)
 DISPLAYSURF.blit(castle, (DISPLAYSURF.get_width()/2 - castle.get_rect().width/2, 700 - castle.get_rect().height))
 
-
+fire = True
 
 pygame.display.update()
 while True:
@@ -105,6 +112,19 @@ while True:
         if event.type == QUIT:
             pygame.quit()
             sys.exit()
+    while fire:
+      
+      ballOne.updateVelocity(0.1)
+      ballOne.updatePosition(0.1)
+      pygame.time.wait(30)
+
+      if ballOne.xPos > DISPLAYSURF.get_width() or ballOne.yPos > DISPLAYSURF.get_height() or ballOne.yPos < 0:
+        fire = False
+      else:
+        
+        DISPLAYSURF.blit(cannonballImg, (ballOne.xPos, ballOne.yPos))
+
+      pygame.display.update()
     
     #pygame.time.wait(5)
     #ball.updateVelocity(0.05)
