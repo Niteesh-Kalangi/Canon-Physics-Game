@@ -123,7 +123,7 @@ def fire(ball):
       
       ball.updateVelocity(0.01)
       ball.updatePosition(0.01)
-      pygame.time.wait(10)
+      pygame.time.wait(5)
 
       if ball.colliding() > 0:
         fire = False
@@ -179,6 +179,7 @@ rVelOut.hide()
 rAngOut.hide()
 
 def startGame():
+  global gameState
   gameState = 2
   b = bSlider.getValue()
   g = gSlider.getValue()
@@ -192,17 +193,21 @@ def startGame():
   gOut.hide()
   mOut.hide()
   wOut.hide()
+  startButton.hide()
   currentBall = CannonBall(cannon1.xPos + cannonImg.get_rect().width/2, cannon1.yPos, math.cos(math.radians(rAngSlider.getValue())) * rVelSlider.getValue(), math.sin(math.radians(rAngSlider.getValue())) * rVelSlider.getValue())
   print("here")
 
-startButton = Button(DISPLAYSURF, 350, 500, 100, 50, text="START", onClick = lambda: startGame())
+startButton = Button(DISPLAYSURF, 450, 500, 100, 50, text="START", onClick = lambda: startGame())
 fireButton = Button(DISPLAYSURF, 450, 65, 100, 50, text="FIRE", onClick = lambda: fire(currentBall))
 fireButton.hide()
 
 pygame.display.update()
 while True:
+    print(cannon2.health)
     events = pygame.event.get()
     if gameState == 1:
+        color = (255, 255, 255)
+        pygame.draw.rect(DISPLAYSURF, color, pygame.Rect(0, 0, 1000, 800))
         bSlider.show()
         gSlider.show()
         mSlider.show()
@@ -215,8 +220,8 @@ while True:
         gOut.setText(gSlider.getValue())
         mOut.setText(mSlider.getValue())
         wOut.setText(wSlider.getValue())
-    elif gameState == 2:  
-      fireButton.hide()
+    elif gameState == 2:
+      fireButton.show()  
       if currentPlayer % 2 == 0:
         lVelSlider.hide()
         lAngSlider.hide()
@@ -239,7 +244,11 @@ while True:
         lVelOut.show()
         lAngOut.show()
         currentBall = CannonBall(cannon2.xPos - cannonImg.get_rect().width/2, cannon2.yPos, -1 * math.cos(math.radians(lAngSlider.getValue())) * lVelSlider.getValue(), math.sin(math.radians(lAngSlider.getValue())) * lVelSlider.getValue())
-  
+        
+      if cannon1.health <= 0:
+        gameState = 3
+      elif cannon2.health <= 0:
+        gameState = 4   
       repaint()
       pygame_widgets.update(events)
       for event in pygame.event.get():
