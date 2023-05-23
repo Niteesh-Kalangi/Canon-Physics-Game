@@ -34,8 +34,8 @@ class CannonBall:
     self.lastUpdate = time
 
   def updatePosition(self, time):
-    self.xPos = self.xPos + self.xVel * (time) * 20
-    self.yPos = self.yPos - self.yVel * (time) * 20
+    self.xPos = self.xPos + self.xVel * (time) * 7
+    self.yPos = self.yPos - self.yVel * (time) * 7
 
   def colliding(self):
     if self.xPos > 1000 or self.xPos < 0 or self.yPos < -200:
@@ -46,11 +46,11 @@ class CannonBall:
       return 3
     if currentPlayer % 2 == 0:
       if self.xPos > cannon2.xPos and self.yPos > cannon2.yPos and self.xPos < cannon2.xPos + cannonImg.get_rect().width and self.yPos < cannon2.yPos + cannonImg.get_rect().height:
-        cannon2.health -= 1
+        cannon2.health = cannon2.health - 1
         return 4
     else:
       if self.xPos < cannon1.xPos and self.yPos > cannon1.yPos and self.xPos > cannon1.xPos - cannonImg.get_rect().width and self.yPos < cannon1.yPos + cannonImg.get_rect().height:
-        cannon1.health -= 1
+        cannon1.health = cannon1.health - 1
         return 4
     return 0
 
@@ -117,7 +117,7 @@ def fire(ball):
 
       if ball.colliding() > 0:
         fire = False
-        #currentPlayer += 1
+        currentPlayer = currentPlayer + 1
       else:
         DISPLAYSURF.blit(cannonballImg, (ball.xPos, ball.yPos))
         repaint()
