@@ -8,7 +8,7 @@ b = 0
 g = 9.8
 m = 10
 w = 0
-currentPlayer = 1
+currentPlayer = 0
 gameState = 1
 
 
@@ -127,7 +127,7 @@ def fire(ball):
 
       if ball.colliding() > 0:
         fire = False
-        #currentPlayer = currentPlayer + 1
+        currentPlayer = currentPlayer + 1
       else:
         DISPLAYSURF.blit(cannonballImg, (ball.xPos, ball.yPos))
         repaint()
@@ -145,7 +145,6 @@ def repaint():
 
 
 
-
 castle = pygame.image.load('assets/castle.png')
 castle = pygame.transform.scale(castle, (200, int(int(castle.get_rect().height) * (200/int(castle.get_rect().width)))))
 
@@ -154,10 +153,18 @@ rVelSlider = Slider(DISPLAYSURF, 50, 50, 200, 25, min=20, max = 60, step = 0.5)
 rAngSlider = Slider(DISPLAYSURF, 50, 100, 200, 25, min = 20, max = 70, step = 1)
 lVelSlider = Slider(DISPLAYSURF, 750, 50, 200, 25, min=20, max = 60, step = 0.5)
 lAngSlider = Slider(DISPLAYSURF, 750, 100, 200, 25, min = 20, max = 70, step = 1)
+bSlider = Slider(DISPLAYSURF, 400, 300, 200, 25, min = 5, max = 50, step = 0.5)
+gSlider = Slider(DISPLAYSURF, 400, 350, 200, 25, min = 5, max = 50, step = 0.5)
+mSlider = Slider(DISPLAYSURF, 400, 400, 200, 25, min = 5, max = 50, step = 0.5)
+wSlider = Slider(DISPLAYSURF, 400, 450, 200, 25, min = 5, max = 50, step = 0.5)
 rVelOut = TextBox(DISPLAYSURF, 270, 50, 35, 25, fontSize = 20)
 rAngOut = TextBox(DISPLAYSURF, 270, 100, 35, 25, fontSize = 20)
 lVelOut = TextBox(DISPLAYSURF, 970, 50, 35, 25, fontSize = 20)
 lAngOut = TextBox(DISPLAYSURF, 970, 100, 35, 25, fontSize = 20)
+bOut = TextBox(DISPLAYSURF, 620, 300, 35, 25, fontSize = 20)
+gOut = TextBox(DISPLAYSURF, 620, 350, 35, 25, fontSize = 20)
+mOut = TextBox(DISPLAYSURF, 620, 400, 35, 25, fontSize = 20)
+wOut = TextBox(DISPLAYSURF, 620, 450, 35, 25, fontSize = 20)
 rVelOut.setText(rVelSlider.getValue())
 rAngOut.setText(rAngSlider.getValue())
 lVelOut.setText(lVelSlider.getValue())
@@ -171,14 +178,44 @@ rAngSlider.hide()
 rVelOut.hide()
 rAngOut.hide()
 
+def startGame():
+  gameState = 2
+  b = bSlider.getValue()
+  g = gSlider.getValue()
+  m = mSlider.getValue()
+  w = wSlider.getValue()
+  bSlider.hide()
+  gSlider.hide()
+  mSlider.hide()
+  wSlider.hide()
+  bOut.hide()
+  gOut.hide()
+  mOut.hide()
+  wOut.hide()
+  currentBall = CannonBall(cannon1.xPos + cannonImg.get_rect().width/2, cannon1.yPos, math.cos(math.radians(rAngSlider.getValue())) * rVelSlider.getValue(), math.sin(math.radians(rAngSlider.getValue())) * rVelSlider.getValue())
+  print("here")
 
+startButton = Button(DISPLAYSURF, 350, 500, 100, 50, text="START", onClick = lambda: startGame())
 fireButton = Button(DISPLAYSURF, 450, 65, 100, 50, text="FIRE", onClick = lambda: fire(currentBall))
 fireButton.hide()
 
 pygame.display.update()
 while True:
     events = pygame.event.get()
-    if gameState == 2:  
+    if gameState == 1:
+        bSlider.show()
+        gSlider.show()
+        mSlider.show()
+        wSlider.show()
+        bOut.show()
+        gOut.show()
+        mOut.show()
+        wOut.show()
+        bOut.setText(bSlider.getValue())
+        gOut.setText(gSlider.getValue())
+        mOut.setText(mSlider.getValue())
+        wOut.setText(wSlider.getValue())
+    elif gameState == 2:  
       fireButton.hide()
       if currentPlayer % 2 == 0:
         lVelSlider.hide()
