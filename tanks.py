@@ -8,7 +8,8 @@ b = 0
 g = 9.8
 m = 10
 w = 0
-currentPlayer = 0
+currentPlayer = 1
+gameState = 1
 
 
 #cannonball class
@@ -42,8 +43,14 @@ class CannonBall:
     if self.xPos > 1000 or self.xPos < 0 or self.yPos < -200:
       return 1
     if self.yPos > 710:
+      yPos = 700
       return 2
     if self.xPos > castle.get_rect().left and self.xPos < castle.get_rect().left + castle.get_rect().width and self.yPos > castle.get_rect().top and self.yPos < castle.get_rect().top + castle.get_rect().height:
+      print("castle collision")
+      if currentPlayer % 2 == 0:
+        xPos = castle.get_rect().left
+      else:
+        xPos = castle.get_rect().left + castle.get_rect().width
       return 3
     if currentPlayer % 2 == 0:
       if self.xPos > cannon2.xPos and self.yPos > cannon2.yPos and self.xPos < cannon2.xPos + cannonImg.get_rect().width and self.yPos < cannon2.yPos + cannonImg.get_rect().height:
@@ -114,13 +121,13 @@ def fire(ball):
    fire = True
    while fire:
       
-      ball.updateVelocity(0.1)
-      ball.updatePosition(0.1)
-      pygame.time.wait(30)
+      ball.updateVelocity(0.01)
+      ball.updatePosition(0.01)
+      pygame.time.wait(10)
 
       if ball.colliding() > 0:
         fire = False
-        currentPlayer += 1
+        #currentPlayer = currentPlayer + 1
       else:
         DISPLAYSURF.blit(cannonballImg, (ball.xPos, ball.yPos))
         repaint()
@@ -155,34 +162,57 @@ rVelOut.setText(rVelSlider.getValue())
 rAngOut.setText(rAngSlider.getValue())
 lVelOut.setText(lVelSlider.getValue())
 lAngOut.setText(lAngSlider.getValue())
+lVelSlider.hide()
+lAngSlider.hide()
+lVelOut.hide()
+lAngOut.hide()
+rVelSlider.hide()
+rAngSlider.hide()
+rVelOut.hide()
+rAngOut.hide()
+
 
 fireButton = Button(DISPLAYSURF, 450, 65, 100, 50, text="FIRE", onClick = lambda: fire(currentBall))
+fireButton.hide()
 
 pygame.display.update()
 while True:
-    if currentPlayer % 2 == 0:
-      lVelSlider.hide()
-      lAngSlider.hide()
-      currentBall = CannonBall(cannon1.xPos + cannonImg.get_rect().width/2, cannon1.yPos, math.cos(math.radians(rAngSlider.getValue())) * rVelSlider.getValue(), math.sin(math.radians(rAngSlider.getValue())) * rVelSlider.getValue())
-    else:
-      rVelSlider.hide()
-      rAngSlider.hide()
-      currentBall = CannonBall(cannon2.xPos + cannonImg.get_rect().width/2, cannon2.yPos, -1 * math.cos(math.radians(lAngSlider.getValue())) * lVelSlider.getValue(), math.sin(math.radians(lAngSlider.getValue())) * lVelSlider.getValue())
- 
-    repaint()
     events = pygame.event.get()
-    pygame_widgets.update(events)
-    for event in pygame.event.get():
-        if event.type == QUIT:
-            pygame.quit()
-            sys.exit()
-    rVelOut.setText(rVelSlider.getValue())
-    rAngOut.setText(rAngSlider.getValue())
-    lVelOut.setText(lVelSlider.getValue())
-    lAngOut.setText(lAngSlider.getValue())
-    #pygame.time.wait(5)
-    #ball.updateVelocity(0.05)
-    #ball.updatePosition(0.05)
+    if gameState == 2:  
+      fireButton.hide()
+      if currentPlayer % 2 == 0:
+        lVelSlider.hide()
+        lAngSlider.hide()
+        lVelOut.hide()
+        lAngOut.hide()
+
+        rVelSlider.show()
+        rAngSlider.show()
+        rVelOut.show()
+        rAngOut.show()
+        currentBall = CannonBall(cannon1.xPos + cannonImg.get_rect().width/2, cannon1.yPos, math.cos(math.radians(rAngSlider.getValue())) * rVelSlider.getValue(), math.sin(math.radians(rAngSlider.getValue())) * rVelSlider.getValue())
+      else:
+        rVelSlider.hide()
+        rAngSlider.hide()
+        rVelOut.hide()
+        rAngOut.hide()
+
+        lVelSlider.show()
+        lAngSlider.show()
+        lVelOut.show()
+        lAngOut.show()
+        currentBall = CannonBall(cannon2.xPos - cannonImg.get_rect().width/2, cannon2.yPos, -1 * math.cos(math.radians(lAngSlider.getValue())) * lVelSlider.getValue(), math.sin(math.radians(lAngSlider.getValue())) * lVelSlider.getValue())
+  
+      repaint()
+      pygame_widgets.update(events)
+      for event in pygame.event.get():
+          if event.type == QUIT:
+              pygame.quit()
+              sys.exit()
+      rVelOut.setText(rVelSlider.getValue())
+      rAngOut.setText(rAngSlider.getValue())
+      lVelOut.setText(lVelSlider.getValue())
+      lAngOut.setText(lAngSlider.getValue())
     pygame_widgets.update(events)
     pygame.display.update()
 
