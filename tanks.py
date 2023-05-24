@@ -10,8 +10,21 @@ m = 10
 w = 0
 currentPlayer = 0
 gameState = 1
+#castle = pygame.image.load('assets/castle.png')
 
 
+class Cannon:
+  def __init__(self, health, xPos, yPos):
+    self.health = health
+    self.xPos = xPos
+    self.yPos = yPos
+
+  #def fire(angle, velocity):
+    #ball = CannonBall(xPos, yPos, )
+
+    
+cannon1 = Cannon(3, 100, 700)
+cannon2 = Cannon(3, 900, 700)
 #cannonball class
 class CannonBall:
   xPos = 0
@@ -42,7 +55,7 @@ class CannonBall:
   def colliding(self):
     if self.xPos > 1000 or self.xPos < 0 or self.yPos < -200:
       return 1
-    if self.yPos > 710:
+    if self.yPos > 750:
       yPos = 700
       return 2
     if self.xPos > castle.get_rect().left and self.xPos < castle.get_rect().left + castle.get_rect().width and self.yPos > castle.get_rect().top and self.yPos < castle.get_rect().top + castle.get_rect().height:
@@ -55,10 +68,12 @@ class CannonBall:
     if currentPlayer % 2 == 0:
       if self.xPos > cannon2.xPos and self.yPos > cannon2.yPos and self.xPos < cannon2.xPos + cannonImg.get_rect().width and self.yPos < cannon2.yPos + cannonImg.get_rect().height:
         cannon2.health = cannon2.health - 1
+        print("cannon2")
         return 4
     else:
       if self.xPos < cannon1.xPos and self.yPos > cannon1.yPos and self.xPos > cannon1.xPos - cannonImg.get_rect().width and self.yPos < cannon1.yPos + cannonImg.get_rect().height:
         cannon1.health = cannon1.health - 1
+        print("cannon2")
         return 4
     return 0
 
@@ -67,14 +82,7 @@ class CannonBall:
   #def hitCannon(cannon):
     
 
-class Cannon:
-  def __init__(self, health, xPos, yPos):
-    self.health = health
-    self.xPos = xPos
-    self.yPos = yPos
 
-  #def fire(angle, velocity):
-    #ball = CannonBall(xPos, yPos, )
     
   
 ball = CannonBall(0,0,10.0,10.0)
@@ -102,8 +110,7 @@ cannonballImg = pygame.image.load('assets/cannonball.png')
 cannonballImg = pygame.transform.scale(cannonballImg, (20, int(int(cannonballImg.get_rect().height) * (20/int(cannonballImg.get_rect().width)))))
 
 
-cannon1 = Cannon(100, 100, 700)
-cannon2 = Cannon(100, 900, 700)
+
 
 def drawCannon(health, xPos, yPos):
     if xPos > 500:
@@ -203,7 +210,7 @@ fireButton.hide()
 
 pygame.display.update()
 while True:
-    print(cannon2.health)
+    #print(cannon2.health)
     events = pygame.event.get()
     if gameState == 1:
         color = (255, 255, 255)
