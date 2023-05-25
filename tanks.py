@@ -10,7 +10,13 @@ m = 10
 w = 0
 currentPlayer = 0
 gameState = 1
-#castle = pygame.image.load('assets/castle.png')
+castle = pygame.image.load('assets/castle.png')
+castle = pygame.transform.scale(castle, (200, int(int(castle.get_rect().height) * (200/int(castle.get_rect().width)))))
+cannonImg = pygame.image.load('assets/cannon.png')
+cannonImg = pygame.transform.scale(cannonImg, (80, int(int(cannonImg.get_rect().height) * (80/int(cannonImg.get_rect().width)))))
+cannonballImg = pygame.image.load('assets/cannonball.png')
+cannonballImg = pygame.transform.scale(cannonballImg, (20, int(int(cannonballImg.get_rect().height) * (20/int(cannonballImg.get_rect().width)))))
+
 
 
 class Cannon:
@@ -45,20 +51,33 @@ class CannonBall:
 
   def updateVelocity(self, time):
     self.yVel = self.yVel + ((-m*g - b*(self.yVel**2))/m)*(time)
-    self.xVel = self.xVel + ((w - b*(self.xVel**2))/m)*(time)
-    self.lastUpdate = time
+    if self.xVel < 0:
+      self.xVel = self.xVel + ((w+ b*(self.xVel**2))/m)*(time)
+    else:
+      self.xVel = self.xVel + ((w - b*(self.xVel**2))/m)*(time)
 
   def updatePosition(self, time):
-    self.xPos = self.xPos + self.xVel * (time) * 7
-    self.yPos = self.yPos - self.yVel * (time) * 7
+    self.xPos = self.xPos + self.xVel * (time) * 30
+    self.yPos = self.yPos - self.yVel * (time) * 30
 
   def colliding(self):
+    global castle
+    global cannon1
+    global cannon2
+
+    castlex = 500 - castle.get_rect().width/2 
+    castley = 700 - castle.get_rect().height
+    print(cannon2.xPos)
+    print(cannon2.yPos)
+    print(self.xPos)
+    print(self.yPos)
     if self.xPos > 1000 or self.xPos < 0 or self.yPos < -200:
       return 1
     if self.yPos > 750:
       yPos = 700
       return 2
-    if self.xPos > castle.get_rect().left and self.xPos < castle.get_rect().left + castle.get_rect().width and self.yPos > castle.get_rect().top and self.yPos < castle.get_rect().top + castle.get_rect().height:
+    if self.xPos > castlex and self.xPos < castlex + castle.get_rect().width and self.yPos > castley and self.yPos < castley + castle.get_rect().height:
+      print(castle.get_rect().center)
       print("castle collision")
       if currentPlayer % 2 == 0:
         xPos = castle.get_rect().left
@@ -66,12 +85,12 @@ class CannonBall:
         xPos = castle.get_rect().left + castle.get_rect().width
       return 3
     if currentPlayer % 2 == 0:
-      if self.xPos > cannon2.xPos and self.yPos > cannon2.yPos and self.xPos < cannon2.xPos + cannonImg.get_rect().width and self.yPos < cannon2.yPos + cannonImg.get_rect().height:
+      if self.xPos > cannon2.xPos - cannonImg.get_rect().width/2 and self.yPos > cannon2.yPos and self.xPos < cannon2.xPos + cannonImg.get_rect().width + cannonImg.get_rect().width/2 and self.yPos < cannon2.yPos + cannonImg.get_rect().height:
         cannon2.health = cannon2.health - 1
-        print("cannon2")
+        print("cannon1")
         return 4
     else:
-      if self.xPos < cannon1.xPos and self.yPos > cannon1.yPos and self.xPos > cannon1.xPos - cannonImg.get_rect().width and self.yPos < cannon1.yPos + cannonImg.get_rect().height:
+      if self.xPos < cannon1.xPos + cannonImg.get_rect().width/2 and self.yPos > cannon1.yPos and self.xPos > cannon1.xPos - cannonImg.get_rect().width/2 and self.yPos < cannon1.yPos + cannonImg.get_rect().height:
         cannon1.health = cannon1.health - 1
         print("cannon2")
         return 4
@@ -104,14 +123,6 @@ DISPLAYSURF = pygame.display.set_mode((1000, 800))
 pygame.display.set_caption('Hello World!')
 
 
-cannonImg = pygame.image.load('assets/cannon.png')
-cannonImg = pygame.transform.scale(cannonImg, (80, int(int(cannonImg.get_rect().height) * (80/int(cannonImg.get_rect().width)))))
-cannonballImg = pygame.image.load('assets/cannonball.png')
-cannonballImg = pygame.transform.scale(cannonballImg, (20, int(int(cannonballImg.get_rect().height) * (20/int(cannonballImg.get_rect().width)))))
-
-
-
-
 def drawCannon(health, xPos, yPos):
     if xPos > 500:
       cannon_flipped = pygame.transform.flip(cannonImg, True, False)
@@ -130,7 +141,7 @@ def fire(ball):
       
       ball.updateVelocity(0.01)
       ball.updatePosition(0.01)
-      pygame.time.wait(5)
+      pygame.time.wait(20)
 
       if ball.colliding() > 0:
         fire = False
@@ -157,13 +168,13 @@ castle = pygame.transform.scale(castle, (200, int(int(castle.get_rect().height) 
 
 
 rVelSlider = Slider(DISPLAYSURF, 50, 50, 200, 25, min=20, max = 60, step = 0.5)
-rAngSlider = Slider(DISPLAYSURF, 50, 100, 200, 25, min = 20, max = 70, step = 1)
+rAngSlider = Slider(DISPLAYSURF, 50, 100, 200, 25, min = 1, max = 89, step = 1)
 lVelSlider = Slider(DISPLAYSURF, 750, 50, 200, 25, min=20, max = 60, step = 0.5)
-lAngSlider = Slider(DISPLAYSURF, 750, 100, 200, 25, min = 20, max = 70, step = 1)
-bSlider = Slider(DISPLAYSURF, 400, 300, 200, 25, min = 5, max = 50, step = 0.5)
-gSlider = Slider(DISPLAYSURF, 400, 350, 200, 25, min = 5, max = 50, step = 0.5)
-mSlider = Slider(DISPLAYSURF, 400, 400, 200, 25, min = 5, max = 50, step = 0.5)
-wSlider = Slider(DISPLAYSURF, 400, 450, 200, 25, min = 5, max = 50, step = 0.5)
+lAngSlider = Slider(DISPLAYSURF, 750, 100, 200, 25, min = 1, max = 89, step = 1)
+bSlider = Slider(DISPLAYSURF, 400, 300, 200, 25, min = 0, max = 1, step = 0.01)
+gSlider = Slider(DISPLAYSURF, 400, 350, 200, 25, min = 5, max = 15, step = 0.5)
+mSlider = Slider(DISPLAYSURF, 400, 400, 200, 25, min = 5, max = 20, step = 0.5)
+wSlider = Slider(DISPLAYSURF, 400, 450, 200, 25, min = -20, max = 20, step = 0.01)
 rVelOut = TextBox(DISPLAYSURF, 270, 50, 35, 25, fontSize = 20)
 rAngOut = TextBox(DISPLAYSURF, 270, 100, 35, 25, fontSize = 20)
 lVelOut = TextBox(DISPLAYSURF, 970, 50, 35, 25, fontSize = 20)
@@ -186,6 +197,10 @@ rVelOut.hide()
 rAngOut.hide()
 
 def startGame():
+  global m
+  global b
+  global g
+  global w
   global gameState
   gameState = 2
   b = bSlider.getValue()
