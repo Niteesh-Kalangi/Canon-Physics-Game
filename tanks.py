@@ -57,8 +57,8 @@ class CannonBall:
       self.xVel = self.xVel + ((w - b*(self.xVel**2))/m)*(time)
 
   def updatePosition(self, time):
-    self.xPos = self.xPos + self.xVel * (time) * 30
-    self.yPos = self.yPos - self.yVel * (time) * 30
+    self.xPos = self.xPos + self.xVel * (time) * 50
+    self.yPos = self.yPos - self.yVel * (time) * 50
 
   def colliding(self):
     global castle
@@ -168,9 +168,9 @@ castle = pygame.transform.scale(castle, (200, int(int(castle.get_rect().height) 
 print(castle.get_rect().left)
 
 
-rVelSlider = Slider(DISPLAYSURF, 50, 50, 200, 25, min=20, max = 60, step = 0.5)
+rVelSlider = Slider(DISPLAYSURF, 50, 50, 200, 25, min=20, max = 90, step = 0.5)
 rAngSlider = Slider(DISPLAYSURF, 50, 100, 200, 25, min = 1, max = 89, step = 1)
-lVelSlider = Slider(DISPLAYSURF, 750, 50, 200, 25, min=20, max = 60, step = 0.5)
+lVelSlider = Slider(DISPLAYSURF, 750, 50, 200, 25, min=20, max = 90, step = 0.5)
 lAngSlider = Slider(DISPLAYSURF, 750, 100, 200, 25, min = 1, max = 89, step = 1)
 c1Health = TextBox(DISPLAYSURF, cannon1.xPos + 25, cannon1.yPos + 40, 30, 25, fontSize = 20)
 c2Health = TextBox(DISPLAYSURF, cannon2.xPos -50, cannon2.yPos + 40, 30, 25, fontSize = 20)
@@ -241,7 +241,7 @@ def startGame():
   gLabel.hide()
   mLabel.hide()
   wLabel.hide()
-  startButton.hide()
+  start2Button.hide()
   title.hide()
   currentBall = CannonBall(cannon1.xPos + cannonImg.get_rect().width/2, cannon1.yPos, math.cos(math.radians(rAngSlider.getValue())) * rVelSlider.getValue(), math.sin(math.radians(rAngSlider.getValue())) * rVelSlider.getValue())
 
@@ -274,9 +274,12 @@ def winScreen():
   elif cannon2.health <= 0:
     winner.setText("Player 1 Wins!")
 
-startButton = Button(DISPLAYSURF, 450, 500, 100, 50, text="START", onClick = lambda: startGame())
+#startButton = Button(DISPLAYSURF, 450, 500, 100, 50, text="START", onClick = lambda: startGame())
+start2Button = Button(DISPLAYSURF, 450, 550, 100, 50, text="START2", onClick = lambda: startGame())
 fireButton = Button(DISPLAYSURF, 450, 65, 100, 50, text="FIRE", onClick = lambda: fire(currentBall))
 restartButton = Button(DISPLAYSURF, 450, 500, 100, 50, text="START", onClick = lambda: restart())
+#startButton.enable()
+
 restartButton.hide()
 fireButton.hide()
 
