@@ -80,9 +80,9 @@ class CannonBall:
       print(castle.get_rect().center)
       print("castle collision")
       if currentPlayer % 2 == 0:
-        xPos = castle.get_rect().left
+        xPos = 400
       else:
-        xPos = castle.get_rect().left + castle.get_rect().width
+        xPos = 600
       return 3
     if currentPlayer % 2 == 0:
       if self.xPos > cannon2.xPos - cannonImg.get_rect().width/2 and self.yPos > cannon2.yPos and self.xPos < cannon2.xPos + cannonImg.get_rect().width + cannonImg.get_rect().width/2 and self.yPos < cannon2.yPos + cannonImg.get_rect().height:
@@ -92,7 +92,7 @@ class CannonBall:
     else:
       if self.xPos < cannon1.xPos + cannonImg.get_rect().width/2 and self.yPos > cannon1.yPos and self.xPos > cannon1.xPos - cannonImg.get_rect().width/2 and self.yPos < cannon1.yPos + cannonImg.get_rect().height:
         cannon1.health = cannon1.health - 1
-        print("cannon2")
+        print("cannon")
         return 4
     return 0
 
@@ -165,6 +165,7 @@ def repaint():
 
 castle = pygame.image.load('assets/castle.png')
 castle = pygame.transform.scale(castle, (200, int(int(castle.get_rect().height) * (200/int(castle.get_rect().width)))))
+print(castle.get_rect().left)
 
 
 rVelSlider = Slider(DISPLAYSURF, 50, 50, 200, 25, min=20, max = 60, step = 0.5)
@@ -183,6 +184,14 @@ bOut = TextBox(DISPLAYSURF, 620, 300, 35, 25, fontSize = 20)
 gOut = TextBox(DISPLAYSURF, 620, 350, 35, 25, fontSize = 20)
 mOut = TextBox(DISPLAYSURF, 620, 400, 35, 25, fontSize = 20)
 wOut = TextBox(DISPLAYSURF, 620, 450, 35, 25, fontSize = 20)
+bLabel = TextBox(DISPLAYSURF, 300, 300, 50, 25, fontSize = 20)
+gLabel = TextBox(DISPLAYSURF, 300, 350, 50, 25, fontSize = 20)
+mLabel = TextBox(DISPLAYSURF, 300, 400, 50, 25, fontSize = 20)
+wLabel = TextBox(DISPLAYSURF, 300, 450, 50, 25, fontSize = 20)
+bLabel.setText("b")
+gLabel.setText("g")
+mLabel.setText("mass")
+wLabel.setText("wind")
 rVelOut.setText(rVelSlider.getValue())
 rAngOut.setText(rAngSlider.getValue())
 lVelOut.setText(lVelSlider.getValue())
@@ -195,6 +204,10 @@ rVelSlider.hide()
 rAngSlider.hide()
 rVelOut.hide()
 rAngOut.hide()
+bLabel.hide()
+gLabel.hide()
+mLabel.hide()
+wLabel.hide()
 
 def startGame():
   global m
@@ -215,6 +228,10 @@ def startGame():
   gOut.hide()
   mOut.hide()
   wOut.hide()
+  bLabel.hide()
+  gLabel.hide()
+  mLabel.hide()
+  wLabel.hide()
   startButton.hide()
   currentBall = CannonBall(cannon1.xPos + cannonImg.get_rect().width/2, cannon1.yPos, math.cos(math.radians(rAngSlider.getValue())) * rVelSlider.getValue(), math.sin(math.radians(rAngSlider.getValue())) * rVelSlider.getValue())
   print("here")
@@ -238,6 +255,10 @@ while True:
         gOut.show()
         mOut.show()
         wOut.show()
+        bLabel.show()
+        gLabel.show()
+        mLabel.show()
+        wLabel.show()
         bOut.setText(bSlider.getValue())
         gOut.setText(gSlider.getValue())
         mOut.setText(mSlider.getValue())
