@@ -172,6 +172,8 @@ rVelSlider = Slider(DISPLAYSURF, 50, 50, 200, 25, min=20, max = 60, step = 0.5)
 rAngSlider = Slider(DISPLAYSURF, 50, 100, 200, 25, min = 1, max = 89, step = 1)
 lVelSlider = Slider(DISPLAYSURF, 750, 50, 200, 25, min=20, max = 60, step = 0.5)
 lAngSlider = Slider(DISPLAYSURF, 750, 100, 200, 25, min = 1, max = 89, step = 1)
+c1Health = TextBox(DISPLAYSURF, cannon1.xPos + 25, cannon1.yPos + 40, 30, 25, fontSize = 20)
+c2Health = TextBox(DISPLAYSURF, cannon2.xPos -50, cannon2.yPos + 40, 30, 25, fontSize = 20)
 bSlider = Slider(DISPLAYSURF, 400, 300, 200, 25, min = 0, max = 1, step = 0.01)
 gSlider = Slider(DISPLAYSURF, 400, 350, 200, 25, min = 5, max = 15, step = 0.5)
 mSlider = Slider(DISPLAYSURF, 400, 400, 200, 25, min = 5, max = 20, step = 0.5)
@@ -188,6 +190,9 @@ bLabel = TextBox(DISPLAYSURF, 300, 300, 50, 25, fontSize = 20)
 gLabel = TextBox(DISPLAYSURF, 300, 350, 50, 25, fontSize = 20)
 mLabel = TextBox(DISPLAYSURF, 300, 400, 50, 25, fontSize = 20)
 wLabel = TextBox(DISPLAYSURF, 300, 450, 50, 25, fontSize = 20)
+title = TextBox(DISPLAYSURF, 400, 200, 200, 75, fontSize = 65)
+winner = TextBox(DISPLAYSURF, 400, 200, 200, 75, fontSize = 20)
+title.setText("TANKS")
 bLabel.setText("b")
 gLabel.setText("g")
 mLabel.setText("mass")
@@ -208,6 +213,10 @@ bLabel.hide()
 gLabel.hide()
 mLabel.hide()
 wLabel.hide()
+title.hide()
+c1Health.hide()
+c2Health.hide()
+winner.hide()
 
 def startGame():
   global m
@@ -233,12 +242,44 @@ def startGame():
   mLabel.hide()
   wLabel.hide()
   startButton.hide()
+  title.hide()
   currentBall = CannonBall(cannon1.xPos + cannonImg.get_rect().width/2, cannon1.yPos, math.cos(math.radians(rAngSlider.getValue())) * rVelSlider.getValue(), math.sin(math.radians(rAngSlider.getValue())) * rVelSlider.getValue())
-  print("here")
+
+def restart():
+  global gameState
+  gameState = 1
+
+def winScreen():
+  pygame.draw.rect(DISPLAYSURF, color, pygame.Rect(0, 0, 1000, 800))
+  lVelSlider.hide()
+  lAngSlider.hide()
+  lVelOut.hide()
+  lAngOut.hide()
+  rVelSlider.hide()
+  rAngSlider.hide()
+  rVelOut.hide()
+  rAngOut.hide()
+  bLabel.hide()
+  gLabel.hide()
+  mLabel.hide()
+  wLabel.hide()
+  title.hide()
+  c1Health.hide()
+  c2Health.hide()
+  fireButton.hide()
+  restartButton.show()
+  winner.show()
+  if cannon1.health <= 0:
+    winner.setText("Player 2 Wins!")
+  elif cannon2.health <= 0:
+    winner.setText("Player 1 Wins!")
 
 startButton = Button(DISPLAYSURF, 450, 500, 100, 50, text="START", onClick = lambda: startGame())
 fireButton = Button(DISPLAYSURF, 450, 65, 100, 50, text="FIRE", onClick = lambda: fire(currentBall))
+restartButton = Button(DISPLAYSURF, 450, 500, 100, 50, text="START", onClick = lambda: restart())
+restartButton.hide()
 fireButton.hide()
+
 
 pygame.display.update()
 while True:
@@ -247,6 +288,15 @@ while True:
     if gameState == 1:
         color = (255, 255, 255)
         pygame.draw.rect(DISPLAYSURF, color, pygame.Rect(0, 0, 1000, 800))
+        fireButton.hide()
+        lVelSlider.hide()
+        lAngSlider.hide()
+        lVelOut.hide()
+        lAngOut.hide()
+        rVelSlider.hide()
+        rAngSlider.hide()
+        rVelOut.hide()
+        rAngOut.hide()
         bSlider.show()
         gSlider.show()
         mSlider.show()
@@ -259,12 +309,15 @@ while True:
         gLabel.show()
         mLabel.show()
         wLabel.show()
+        title.show()
         bOut.setText(bSlider.getValue())
         gOut.setText(gSlider.getValue())
         mOut.setText(mSlider.getValue())
         wOut.setText(wSlider.getValue())
     elif gameState == 2:
-      fireButton.show()  
+      fireButton.show() 
+      c1Health.show()
+      c2Health.show() 
       if currentPlayer % 2 == 0:
         lVelSlider.hide()
         lAngSlider.hide()
@@ -288,10 +341,8 @@ while True:
         lAngOut.show()
         currentBall = CannonBall(cannon2.xPos - cannonImg.get_rect().width/2, cannon2.yPos, -1 * math.cos(math.radians(lAngSlider.getValue())) * lVelSlider.getValue(), math.sin(math.radians(lAngSlider.getValue())) * lVelSlider.getValue())
         
-      if cannon1.health <= 0:
-        gameState = 3
-      elif cannon2.health <= 0:
-        gameState = 4   
+      if cannon1.health <= 0 or cannon2.health <= 0:
+        gameState = 3 
       repaint()
       pygame_widgets.update(events)
       for event in pygame.event.get():
@@ -302,6 +353,10 @@ while True:
       rAngOut.setText(rAngSlider.getValue())
       lVelOut.setText(lVelSlider.getValue())
       lAngOut.setText(lAngSlider.getValue())
+      c1Health.setText(cannon1.health)
+      c2Health.setText(cannon2.health)
+    elif gameState == 3:
+      winScreen()
     pygame_widgets.update(events)
     pygame.display.update()
 
